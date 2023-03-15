@@ -11,7 +11,7 @@ export const App = () => {
         style={{
           fontSize: 'xx-large',
           textAlign: 'center',
-          marginTop: '90px',
+          marginTop: '30px',
         }}
       >
         Phonebook
