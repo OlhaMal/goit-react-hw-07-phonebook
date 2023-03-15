@@ -1,33 +1,22 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { useState } from 'react';
-import { addContact } from 'redux/contactsSlice';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { addContact, fetchContacts } from 'redux/contacts/contactsOperations';
 import css from './ContactForm.module.css';
-import { toast } from 'react-toastify';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-
+  const [phone, setPhone] = useState('');
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.contacts);
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const handleFormSubmit = evt => {
     evt.preventDefault();
-    if (contacts.find(contact => contact.name === name)) {
-      return toast.warn(`${name} is already in contacts.`, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
-    }
-    dispatch(addContact(name, number));
+    dispatch(addContact({ name, phone }));
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   const handleChange = evt => {
@@ -36,8 +25,8 @@ export const ContactForm = () => {
       case 'name':
         setName(value);
         break;
-      case 'number':
-        setNumber(value);
+      case 'phone':
+        setPhone(value);
         break;
       default:
         return;
@@ -60,12 +49,12 @@ export const ContactForm = () => {
       <label className={css.formLabel}>Number</label>
       <input
         type="tel"
-        name="number"
+        name="phone"
         pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
         required
         placeholder="xxx-xx-xx"
-        value={number}
+        value={phone}
         onChange={handleChange}
       />
       <button className={css.formBtn} type="submit">
