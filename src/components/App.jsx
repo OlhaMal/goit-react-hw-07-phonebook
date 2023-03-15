@@ -2,9 +2,12 @@ import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 import { ToastContainer } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const App = () => {
+  const isLoading = useSelector(state => state.contacts.isLoading);
+
   return (
     <div>
       <h1
@@ -27,7 +30,16 @@ export const App = () => {
         Contacts
       </h2>
       <Filter />
-      <ContactList />
+
+      {isLoading ? (
+        <b
+          style={{ textAlign: 'center', display: 'block', fontSize: 'x-large' }}
+        >
+          Loading...
+        </b>
+      ) : (
+        <ContactList />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={2000}
